@@ -1,6 +1,6 @@
 # HTML is a Programming Language!
 
-HTML-LANG is experimental and currently in development. Proceed at your own risk!
+`html-lang` is experimental and currently in development. Proceed at your own risk!
 
 ## Install
 
