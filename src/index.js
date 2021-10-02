@@ -1,4 +1,5 @@
 import { injectStyleSheet } from "./stylesheet";
+import { fetchJson } from "./fetch";
 
 const globals = new Map();
 const watchers = new Map();
@@ -28,16 +29,6 @@ const computeValue = (value) => {
   return result;
 };
 
-const fetchJson = async (...args) => {
-  const response = await fetch(...args);
-  if (!response.ok) {
-    throw new Error(
-      `HTTP Error Response: ${response.status} ${response.statusText}`
-    );
-  }
-  return await response.json();
-};
-
 const saveVal = async (element) => {
   for (let attribute of element.attributes) {
     let name = attribute.name;
@@ -60,15 +51,17 @@ const saveVal = async (element) => {
 
     if (name.endsWith(":fetch")) {
       name = name.substring(0, name.length - 6);
-      value = [true, null, null];
+      value = { loading: true, error: null, response: null, json: null };
 
       const url = computeValue(attribute.value);
       fetchJson(url)
-        .then((data) => {
-          globalsSet(name, [false, null, data]);
+        .then(({ response, json }) => {
+          const value = { loading: false, error: null, response, json };
+          globalsSet(name, value);
         })
-        .catch((err) => {
-          globalsSet(name, [false, err, null]);
+        .catch((error) => {
+          const value = { loading: false, error, response: null, json: null };
+          globalsSet(name, value);
         })
         .then(() => {
           const siblings = getSiblings(element);

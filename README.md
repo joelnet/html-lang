@@ -7,10 +7,12 @@
 Include the script tag into the `<head></head>` section of your HTML.
 
 ```html
-<script src="https://unpkg.com/@joelnet/html-lang@0.0.3/umd/html-lang.js"></script>
+<script src="https://unpkg.com/@joelnet/html-lang@0.0.4/umd/html-lang.js"></script>
 ```
 
 ## Variables
+
+Variables are globally scoped.
 
 ```html
 <!-- String -->
@@ -24,6 +26,18 @@ Include the script tag into the `<head></head>` section of your HTML.
 
 <!-- Array -->
 <var z:object="['A', 'B', 'C']"></var>
+```
+
+## Computed Values
+
+The computed value syntax has a `:?` at the end of the Variable name.
+
+```html
+<!-- Set name -->
+<var name="World"></var>
+
+<!-- Compute Message -->
+<var message:?="'Hello ' + name"></var>
 ```
 
 ## Output
@@ -75,7 +89,11 @@ An `else` can be simulated by negating the if condition.
 <val response:fetch="'https://swapi.dev/api/people/1'"></val>
 
 <!-- destructure response into loading, error, data -->
-<val loading:?="response[0]" error:?="response[1]" data:?="response[2]"></val>
+<val
+  loading:?="response.loading"
+  error:?="response.error"
+  data:?="response.json"
+></val>
 
 <!-- Show when Loading -->
 <if test="loading">Loading...</if>

@@ -16,9 +16,9 @@
         <if test="x > 0">
           <val response:fetch="'https://swapi.dev/api/people/'+x"></val>
           <val
-            loading:?="response[0]"
-            error:?="response[1]"
-            data:?="response[2]"
+            loading:?="response.loading"
+            error:?="response.error"
+            data:?="response.json"
           ></val>
           <if test="loading">Loading...</if>
           <if test="error"> Error: <span set:text="error"></span> </if>

@@ -1,6 +1,6 @@
 {
   "name": "@joelnet/html-lang",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "HTML is a Programming Language!",
   "keywords": [
     "html",
@@ -9,6 +9,8 @@
   "author": "Joel Thoms",
   "license": "MIT",
   "scripts": {
+    "clean": "rm -rf umd",
+    "prebuild": "npm run clean",
     "build": "webpack --mode production",
     "predev": "npm run build && cp src/*.html umd/",
     "dev": "webpack serve --mode development"
