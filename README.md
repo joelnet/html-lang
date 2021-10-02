@@ -2,12 +2,14 @@
 
 `html-lang` is experimental and currently in development. Proceed at your own risk!
 
+`html-lang` features no build step, no bundling, no webpack configs. Open up your HTML and start writing HTML.
+
 ## Install
 
 Include the script tag into the `<head></head>` section of your HTML.
 
 ```html
-<script src="https://unpkg.com/@joelnet/html-lang@0.0.4/umd/html-lang.js"></script>
+<script src="https://unpkg.com/@joelnet/html-lang@0.0.5/umd/html-lang.js"></script>
 ```
 
 ## Variables
