@@ -1,4 +1,5 @@
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -10,7 +11,7 @@ module.exports = {
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, "umd"),
+      directory: path.join(__dirname, "examples"),
     },
     compress: false,
     port: 8080,
@@ -26,4 +27,10 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({ filename: 'arrays.html', template: 'examples/arrays.html' }),
+    new HtmlWebpackPlugin({ filename: 'fetch.html', template: 'examples/fetch.html' }),
+    new HtmlWebpackPlugin({ filename: 'fizzbuzz.html', template: 'examples/fizzbuzz.html' }),
+    new HtmlWebpackPlugin({ filename: 'objects.html', template: 'examples/objects.html' }),
+  ]
 };
