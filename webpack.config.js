@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -27,10 +28,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({ filename: 'arrays.html', template: 'examples/arrays.html' }),
-    new HtmlWebpackPlugin({ filename: 'fetch.html', template: 'examples/fetch.html' }),
-    new HtmlWebpackPlugin({ filename: 'fizzbuzz.html', template: 'examples/fizzbuzz.html' }),
-    new HtmlWebpackPlugin({ filename: 'objects.html', template: 'examples/objects.html' }),
-  ]
+  plugins: fs.readdirSync('examples').map(example =>
+    new HtmlWebpackPlugin({ filename: example, template: `examples/${example}` }),
+  )
 };
