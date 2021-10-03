@@ -1,8 +1,6 @@
 const path = require("path");
+const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const glob = require("glob");
-
-const htmlFiles = glob.sync(__dirname + "/src.html/*.html");
 
 module.exports = {
   entry: {
@@ -30,14 +28,11 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    ...htmlFiles.map(
-      (file) =>
-        new HtmlWebpackPlugin({
-          filename: path.basename(file),
-          template: file,
-          minify: false,
-        })
-    ),
-  ],
+  plugins: fs.readdirSync("src.html").map(
+    (filename) =>
+      new HtmlWebpackPlugin({
+        filename,
+        template: `src.html/${filename}`,
+      })
+  ),
 };
