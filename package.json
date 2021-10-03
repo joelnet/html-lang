@@ -12,14 +12,15 @@
     "clean": "rm -rf umd",
     "prebuild": "npm run clean",
     "build": "webpack --mode production",
-    "predev": "npm run build && cp src/*.html umd/",
     "dev": "webpack serve --mode development"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.15.6",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-async-to-promises": "^0.8.15",
+    "html-webpack-plugin": "^5.3.2",
     "serve": "^12.0.1",
     "webpack": "^5.56.0",
     "webpack-cli": "^4.8.0",
