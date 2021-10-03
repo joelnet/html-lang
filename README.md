@@ -18,16 +18,16 @@ Variables are globally scoped.
 
 ```html
 <!-- String -->
-<var message="Hello World"></var>
+<val message="Hello World"></val>
 
 <!-- Number -->
-<var x:number="888"></var>
+<val x:number="888"></val>
 
 <!-- Object -->
-<var y:object="{ x: 1, y: 2 }"></var>
+<val y:object="{ x: 1, y: 2 }"></val>
 
 <!-- Array -->
-<var z:object="['A', 'B', 'C']"></var>
+<val z:object="['A', 'B', 'C']"></val>
 ```
 
 ## Computed Values
@@ -36,10 +36,10 @@ The computed value syntax has a `:?` at the end of the Variable name.
 
 ```html
 <!-- Set name -->
-<var name="World"></var>
+<val name="World"></val>
 
 <!-- Compute Message -->
-<var message:?="'Hello ' + name"></var>
+<val message:?="'Hello ' + name"></val>
 ```
 
 ## Output
@@ -48,7 +48,7 @@ Display a Variable
 
 ```html
 <!-- set message to "Hello World" -->
-<var message="Hello World"></var>
+<val message="Hello World"></val>
 
 <!-- Display message -->
 <span set:text="message"></span>
