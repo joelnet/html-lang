@@ -1,5 +1,8 @@
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const glob = require("glob");
+
+const htmlFiles = glob.sync(__dirname + "/src.html/*.html");
 
 module.exports = {
   entry: {
@@ -11,7 +14,7 @@ module.exports = {
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, "examples"),
+      directory: path.join(__dirname, "src.html"),
     },
     compress: false,
     port: 8080,
@@ -28,9 +31,13 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ filename: 'arrays.html', template: 'examples/arrays.html' }),
-    new HtmlWebpackPlugin({ filename: 'fetch.html', template: 'examples/fetch.html' }),
-    new HtmlWebpackPlugin({ filename: 'fizzbuzz.html', template: 'examples/fizzbuzz.html' }),
-    new HtmlWebpackPlugin({ filename: 'objects.html', template: 'examples/objects.html' }),
-  ]
+    ...htmlFiles.map(
+      (file) =>
+        new HtmlWebpackPlugin({
+          filename: path.basename(file),
+          template: file,
+          minify: false,
+        })
+    ),
+  ],
 };

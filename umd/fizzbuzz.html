@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  <script defer src="html-lang.js"></script></head>
+  <body>
+    <div>
+      <val i:number="1"></val>
+      <while test="i < 101">
+        <div>
+          <if test="i % 3 !== 0 && i % 5 !== 0">
+            <span set:text="i"></span>
+          </if>
+          <if test="i % 3 === 0">Fizz</if><if test="i % 5 === 0">Buzz</if>
+          <val i:?="i+1"></val>
+        </div>
+      </while>
+    </div>
+  </body>
+</html>

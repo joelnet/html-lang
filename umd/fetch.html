@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  <script defer src="html-lang.js"></script></head>
+  <body>
+    <div>
+      <h2>Fetch</h2>
+      <val response:fetch="'https://swapi.dev/api/people/1'"></val>
+      <val
+        loading:?="response.loading"
+        error:?="response.error"
+        data:?="response.json"
+      ></val>
+      <if test="loading">Loading...</if>
+      <if test="error"> Error: <span set:text="error"></span> </if>
+      <if test="data">
+        <div>name: <span set:text="data.name"></span></div>
+        <div>gender: <span set:text="data.gender"></span></div>
+        <div>height: <span set:text="data.height"></span>cm</div>
+      </if>
+    </div>
+  </body>
+</html>
