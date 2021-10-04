@@ -9,7 +9,7 @@
 Include the script tag into the `<head></head>` section of your HTML.
 
 ```html
-<script src="https://unpkg.com/@joelnet/html-lang@0.0.5/umd/html-lang.js"></script>
+<script src="https://unpkg.com/@joelnet/html-lang@0.0.6/umd/html-lang.js"></script>
 ```
 
 ## Variables

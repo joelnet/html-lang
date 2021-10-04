@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+
+      <input type="text" bind:value="newtodo" />
+      <button on:click:todos="[...todos, newtodo]">add</button>
+
+      <hr />
+
+      <div watch="todos">
+        <val index:number="0"></val>
+
+        <while scope:i:number="0" test="i < todos.length">
+          <val todo:?="todos[index]"></val>
+
+          <div>
+            <button on:click:todos="todos.filter((_, j) => j !== i)">X</button>
+            <span set:text="todo"></span>
+          </div>
+
+          <val index:?="index+1"></val>
+          <val i:?="i+1"></val>
+        </while>
+      </div>
+    </div>
+  </body>
+</html>

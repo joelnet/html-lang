@@ -1,8 +1,14 @@
 import { injectStyleSheet } from "./stylesheet";
 import { fetchJson } from "./fetch";
+import { createScope, getScope, saveScope } from "./scopes";
+import {
+  computeValue,
+  attributeValue,
+  globalsSet,
+  watchers,
+  globals,
+} from "./values";
 
-const globals = new Map();
-const watchers = new Map();
 const childrenCache = new WeakMap();
 
 const setVisibility = (element, visible) => {
@@ -12,56 +18,32 @@ const setVisibility = (element, visible) => {
 const getSiblings = (element) =>
   [...element.parentNode.children].filter((el) => el !== element);
 
-const trycatch = (promise) =>
-  promise.then((data) => [null, data]).catch((err) => [err, null]);
-
-const globalsSet = (key, value, runWatchers = true) => {
-  globals.set(key, value);
-  if (runWatchers && watchers.has(key)) {
-    const elements = watchers.get(key);
-    processChildren(elements.values());
-  }
-};
-
-const computeValue = (value) => {
-  const func = new Function(...globals.keys(), `return ${value}`);
-  const result = func(...globals.values());
-  return result;
-};
-
 const saveVal = async (element) => {
   for (let attribute of element.attributes) {
     let name = attribute.name;
     let value = attribute.value;
 
-    if (name.endsWith(":number")) {
-      name = name.substring(0, name.length - 7);
-      value = Number(value);
-    }
-
-    if (name.endsWith(":bool")) {
-      name = name.substring(0, name.length - 5);
-      value = computeValue(value);
-    }
-
-    if (name.endsWith(":object")) {
-      name = name.substring(0, name.length - 7);
-      value = computeValue(value);
+    if (
+      name.endsWith(":number") ||
+      name.endsWith(":bool") ||
+      name.endsWith(":object")
+    ) {
+      ({ name, value } = attributeValue(element, attribute));
     }
 
     if (name.endsWith(":fetch")) {
       name = name.substring(0, name.length - 6);
       value = { loading: true, error: null, response: null, json: null };
 
-      const url = computeValue(attribute.value);
+      const url = computeValue(element, attribute.value);
       fetchJson(url)
         .then(({ response, json }) => {
           const value = { loading: false, error: null, response, json };
-          globalsSet(name, value);
+          globalsSet(element, name, value);
         })
         .catch((error) => {
           const value = { loading: false, error, response: null, json: null };
-          globalsSet(name, value);
+          globalsSet(element, name, value);
         })
         .then(() => {
           const siblings = getSiblings(element);
@@ -71,20 +53,22 @@ const saveVal = async (element) => {
 
     if (name.endsWith(":?")) {
       name = name.substring(0, name.length - 2);
-      value = computeValue(value);
+      value = computeValue(element, value);
     }
 
-    globalsSet(name, value, false);
+    globalsSet(element, name, value, false);
   }
 };
 
 const runIfElement = (element) => {
   if (!element.hasAttribute("test")) return false;
-  const truthy = computeValue(element.getAttribute("test"));
+  const truthy = computeValue(element, element.getAttribute("test"));
   return !!truthy;
 };
 
 const runWhileElement = async (element) => {
+  let scope = createScope(element);
+  saveScope(element, scope);
   let truthy = runIfElement(element);
 
   // cache children
@@ -103,6 +87,13 @@ const runWhileElement = async (element) => {
   while (truthy) {
     const clones = children.map((child) => child.cloneNode(true));
     for (let child of clones) {
+      scope = { ...scope };
+      if (child.tagName !== "VAL") {
+        // VAL has no scope
+        saveScope(child, scope);
+      } else {
+        saveScope(element, scope);
+      }
       element.appendChild(child);
     }
     await processChildren(clones);
@@ -115,11 +106,13 @@ const runWhileElement = async (element) => {
 const parseAttributes = (element) => {
   for (let attribute of element.attributes) {
     if (attribute.name === "set:text") {
-      element.textContent = computeValue(attribute.value);
+      element.textContent = computeValue(element, attribute.value);
     }
-    if (attribute.name === "onchange:set") {
+    // TODO: bind:value is new. deprecate onchange:set.
+    if (attribute.name === "onchange:set" || attribute.name === "bind:value") {
+      globalsSet(element, attribute.value, element.value);
       element.addEventListener("keyup", ({ target }) => {
-        globalsSet(attribute.value, target.value);
+        globalsSet(element, attribute.value, target.value);
       });
     }
     if (attribute.name === "watch") {
@@ -130,6 +123,15 @@ const parseAttributes = (element) => {
         }
         watchers.get(key).add(element);
       }
+    }
+    if (attribute.name.startsWith("on:click")) {
+      const name = attribute.name.substring(9);
+      element.addEventListener("click", () => {
+        const value = computeValue(element, attribute.value);
+        if (name) {
+          globalsSet(element, name, value);
+        }
+      });
     }
   }
 };
@@ -150,7 +152,7 @@ const parseElement = async (element) => {
   parseAttributes(element);
 };
 
-const processChildren = async (children) => {
+export const processChildren = async (children) => {
   for (let element of children) {
     const truthy = await parseElement(element);
     if (element.hasChildNodes() && truthy !== false) {

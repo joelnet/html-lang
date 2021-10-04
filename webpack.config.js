@@ -33,6 +33,7 @@ module.exports = {
       new HtmlWebpackPlugin({
         filename,
         template: `src.html/${filename}`,
+        minify: false,
       })
   ),
 };
