@@ -16,18 +16,17 @@
       <hr />
 
       <div watch="todos">
-        <val index:number="0"></val>
-
-        <while scope:i:number="0" test="i < todos.length">
+        <while scope:index:number="0" test="index < todos.length">
           <val todo:?="todos[index]"></val>
 
           <div>
-            <button on:click:todos="todos.filter((_, j) => j !== i)">X</button>
+            <button on:click:todos="todos.filter((_, i) => i !== index)">
+              X
+            </button>
             <span set:text="todo"></span>
           </div>
 
           <val index:?="index+1"></val>
-          <val i:?="i+1"></val>
         </while>
       </div>
     </div>
