@@ -4,12 +4,14 @@
 
 `html-lang` features no build step, no bundling, no webpack configs. Open up your HTML and start writing HTML.
 
+At only 5kB (gzip) in size, `html-lang` is a tiny framework.
+
 ## Install
 
 Include the script tag into the `<head></head>` section of your HTML.
 
 ```html
-<script src="https://unpkg.com/@joelnet/html-lang@0.0.6/umd/html-lang.js"></script>
+<script src="https://unpkg.com/@joelnet/html-lang@0.0.7/umd/html-lang.js"></script>
 ```
 
 ## Variables
@@ -70,18 +72,40 @@ An `else` can be simulated by negating the if condition.
 
 ## Loops
 
+A `for-of` loop will loop through all the items in the collection, setting the item to the variable specified.
+
 ```html
+<!-- Array -->
+<val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+
+<!-- todo in todos -->
+<for todo:of="todos">
+  <div set:text="todo"></div>
+</for>
+```
+
+A `for-in` loop will loop through all the items in the collection, setting the index to the variable specified.
+
+```html
+<!-- Array -->
+<val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+
 <!-- set i to 1 -->
-<val i:number="1"></val>
+<for index:in="todos">
+  <div set:text="index"></div>
+</for>
+```
 
-<!-- loop while i is less than 11 -->
-<while test="i < 11">
-  <!-- display i -->
-  <div set:text="i"></div>
+`for-of` and `for-in` can be combined together if they both point to the same collection.
 
-  <!-- increment i -->
-  <val i:?="i+1"></val>
-</while>
+```html
+<!-- Array -->
+<val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+
+<!-- set i to 1 -->
+<for index:in="todos" todo:of="todos">
+  <div><span set:text="index"></span>. <span set:text="todo"></span></div>
+</for>
 ```
 
 ## Fetching Data
@@ -116,22 +140,39 @@ An `else` can be simulated by negating the if condition.
 ### FizzBuzz
 
 ```html
-<!-- set i to 1 -->
-<val i:number="1"></val>
+<!-- loop through 1 to 100 -->
+<for num:of="range(1, 100)">
+  <!-- set fizz and buzz Booleans -->
+  <val fizz:?="num % 3 === 0" buzz:?="num % 5 === 0"></val>
 
-<!-- loop to 100 -->
-<while test="i < 101">
   <div>
-    <!-- if no match display i -->
-    <if test="i % 3 !== 0 && i % 5 !== 0">
-      <span set:text="i"></span>
+    <!-- Fizz Buzz -->
+    <if test="fizz">Fizz</if><if test="buzz">Buzz</if>
+
+    <!-- no match -->
+    <if test="!fizz && !buzz">
+      <span set:text="num"></span>
     </if>
-
-    <!-- display Fizz, Buzz -->
-    <if test="i % 3 === 0">Fizz</if><if test="i % 5 === 0">Buzz</if>
-
-    <!-- increment i -->
-    <val i:?="i+1"></val>
   </div>
-</while>
+</for>
+```
+
+### TODO List
+
+```html
+<val todos:object="['Be nice to others', 'Drink water']"></val>
+
+<input type="text" bind:value="newtodo" />
+<button on:click:todos="[...todos, newtodo]">add</button>
+
+<hr />
+
+<div watch="todos">
+  <for todo:of="todos">
+    <div>
+      <button on:click:todos="todos.filter((item) => item !== todo)">X</button>
+      <span set:text="todo"></span>
+    </div>
+  </for>
+</div>
 ```

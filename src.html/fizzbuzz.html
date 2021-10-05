@@ -8,16 +8,15 @@
   </head>
   <body>
     <div>
-      <val i:number="1"></val>
-      <while test="i < 101">
+      <for num:of="range(1, 100)">
+        <val fizz:?="num % 3 === 0" buzz:?="num % 5 === 0"></val>
         <div>
-          <if test="i % 3 !== 0 && i % 5 !== 0">
-            <span set:text="i"></span>
+          <if test="fizz">Fizz</if><if test="buzz">Buzz</if>
+          <if test="!fizz && !buzz">
+            <span set:text="num"></span>
           </if>
-          <if test="i % 3 === 0">Fizz</if><if test="i % 5 === 0">Buzz</if>
-          <val i:?="i+1"></val>
         </div>
-      </while>
+      </for>
     </div>
   </body>
 </html>

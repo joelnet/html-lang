@@ -1,5 +1,6 @@
 import { processChildren } from "./index";
 import { getScope, setValue } from "./scopes";
+import { range } from "./lib/range";
 
 export const watchers = new Map();
 export const globals = new Map();
@@ -20,7 +21,6 @@ export const globalsSet = (element, key, value, runWatchers = true) => {
 };
 
 export const computeValue = (element, value) => {
-  // TODO: Use a Set to avoid duplicates
   const keyValues = new Map([...globals]);
 
   // include scope values
@@ -32,10 +32,8 @@ export const computeValue = (element, value) => {
   const keys = keyValues.keys();
   const values = keyValues.values();
 
-  const set = (key, value) => globalsSet(element, key, value);
-
-  const func = new Function(...keys, "set", `return ${value}`);
-  const result = func(...values, set);
+  const func = new Function(...keys, "range", `return ${value}`);
+  const result = func(...values, range);
   return result;
 };
 

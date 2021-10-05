@@ -7,28 +7,22 @@
     <title>Document</title>
   </head>
   <body>
-    <div>
-      <val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+    <val todos:object="['Be nice to others', 'Drink water']"></val>
 
-      <input type="text" bind:value="newtodo" />
-      <button on:click:todos="[...todos, newtodo]">add</button>
+    <input type="text" bind:value="newtodo" />
+    <button on:click:todos="[...todos, newtodo]">add</button>
 
-      <hr />
+    <hr />
 
-      <div watch="todos">
-        <while scope:index:number="0" test="index < todos.length">
-          <val todo:?="todos[index]"></val>
-
-          <div>
-            <button on:click:todos="todos.filter((_, i) => i !== index)">
-              X
-            </button>
-            <span set:text="todo"></span>
-          </div>
-
-          <val index:?="index+1"></val>
-        </while>
-      </div>
+    <div watch="todos">
+      <for todo:of="todos">
+        <div>
+          <button on:click:todos="todos.filter((item) => item !== todo)">
+            X
+          </button>
+          <span set:text="todo"></span>
+        </div>
+      </for>
     </div>
   </body>
 </html>

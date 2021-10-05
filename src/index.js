@@ -1,12 +1,13 @@
-import { injectStyleSheet } from "./stylesheet";
 import { fetchJson } from "./fetch";
-import { createScope, getScope, saveScope } from "./scopes";
+import { runFor } from "./for";
+import { createScope, saveScope } from "./scopes";
+import { injectStyleSheet } from "./stylesheet";
 import {
-  computeValue,
   attributeValue,
+  computeValue,
+  globals,
   globalsSet,
   watchers,
-  globals,
 } from "./values";
 
 const childrenCache = new WeakMap();
@@ -124,9 +125,12 @@ const parseAttributes = (element) => {
         watchers.get(key).add(element);
       }
     }
-    if (attribute.name.startsWith("on:click")) {
-      const name = attribute.name.substring(9);
-      element.addEventListener("click", () => {
+    if (attribute.name.startsWith("on:")) {
+      const match = attribute.name.match(/on:(?<event>[^:]*)(:(?<name>.*))?/);
+      const eventName = match ? match.groups.event : null;
+      const name = match ? match.groups.name : null;
+
+      element.addEventListener(eventName, () => {
         const value = computeValue(element, attribute.value);
         if (name) {
           globalsSet(element, name, value);
@@ -147,6 +151,9 @@ const parseElement = async (element) => {
   }
   if (element.tagName === "WHILE") {
     return await runWhileElement(element);
+  }
+  if (element.tagName === "FOR") {
+    return await runFor(element);
   }
 
   parseAttributes(element);
