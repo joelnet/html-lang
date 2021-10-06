@@ -1,5 +1,6 @@
 import { fetchJson } from "./fetch";
 import { runFor } from "./for";
+import { addEventListener, removeAllEventListeners } from "./lib/events";
 import { createScope, saveScope } from "./scopes";
 import { injectStyleSheet } from "./stylesheet";
 import {
@@ -11,6 +12,7 @@ import {
 } from "./values";
 
 const childrenCache = new WeakMap();
+const eventListeners = new WeakMap();
 
 const setVisibility = (element, visible) => {
   element.style.display = visible ? "inline-block" : "";
@@ -105,6 +107,8 @@ const runWhileElement = async (element) => {
 };
 
 const parseAttributes = (element) => {
+  removeAllEventListeners(element);
+
   for (let attribute of element.attributes) {
     if (attribute.name === "set:text") {
       element.textContent = computeValue(element, attribute.value);
@@ -112,9 +116,12 @@ const parseAttributes = (element) => {
     // TODO: bind:value is new. deprecate onchange:set.
     if (attribute.name === "onchange:set" || attribute.name === "bind:value") {
       globalsSet(element, attribute.value, element.value);
-      element.addEventListener("keyup", ({ target }) => {
+
+      const handler = ({ target }) => {
         globalsSet(element, attribute.value, target.value);
-      });
+      };
+
+      addEventListener(element, keyup, handler);
     }
     if (attribute.name === "watch") {
       const keys = attribute.value.split(",").map((key) => key.trim());
@@ -130,12 +137,14 @@ const parseAttributes = (element) => {
       const eventName = match ? match.groups.event : null;
       const name = match ? match.groups.name : null;
 
-      element.addEventListener(eventName, () => {
+      const handler = () => {
         const value = computeValue(element, attribute.value);
         if (name) {
           globalsSet(element, name, value);
         }
-      });
+      };
+
+      addEventListener(element, eventName, handler);
     }
   }
 };
