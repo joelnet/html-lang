@@ -120,8 +120,10 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 
 <!-- set i to 1 -->
 <for index:in="todos" todo:of="todos">
-  <div><span set:text="index"></span>. <span set:text="todo"></span></div>
+  <div><span set:text="index+1"></span>. <span set:text="todo"></span></div>
 </for>
+<!-- <div>1. Be nice to others</div> -->
+<!-- <div>2. Drink water</div> -->
 ```
 
 ## Fetching Data
