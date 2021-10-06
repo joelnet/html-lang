@@ -6,6 +6,18 @@
 
 At only 5kB (gzip) in size, `html-lang` is a tiny framework.
 
+## Why?
+
+Most frameworks are designed to be template engines. These typically mix their template language and JavaScript. Meaning you write and tie together both.
+
+While `html-lang` is similar to quite a bit of existing tech out there, the focus of this library is to bring that programming feel to HTML.
+
+This also allows you to stay inside the framework
+
+And because...
+
+![Oh No... You're not familiar with doing whatever the fuck you want?](what-the-hell-are-you-doing.jpg)
+
 ## Install
 
 Include the script tag into the `<head></head>` section of your HTML.
