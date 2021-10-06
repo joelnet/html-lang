@@ -88,31 +88,35 @@ A `for-of` loop will loop through all the items in the collection, setting the i
 
 ```html
 <!-- Array -->
-<val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+<val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- todo in todos -->
 <for todo:of="todos">
   <div set:text="todo"></div>
 </for>
+<!-- <div>Be nice to others</div> -->
+<!-- <div>Drink water</div> -->
 ```
 
 A `for-in` loop will loop through all the items in the collection, setting the index to the variable specified.
 
 ```html
 <!-- Array -->
-<val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+<val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- set i to 1 -->
 <for index:in="todos">
   <div set:text="index"></div>
 </for>
+<!-- <div>0</div> -->
+<!-- <div>1</div> -->
 ```
 
 `for-of` and `for-in` can be combined together if they both point to the same collection.
 
 ```html
 <!-- Array -->
-<val todos:object="['Be Nice to Others', 'Drink Water']"></val>
+<val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- set i to 1 -->
 <for index:in="todos" todo:of="todos">
