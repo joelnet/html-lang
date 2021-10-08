@@ -1,7 +1,8 @@
 const styleSheet = `
 val,
 if,
-while {
+while,
+sub {
     display: none;
 }
 `;

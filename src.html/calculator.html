@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Orbitron"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn-tailwindcss.vercel.app/"></script>
+    <style type="text/tailwindcss">
+      body {
+        font-family: Orbitron, sans-serif;
+      }
+      button {
+        @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded;
+      }
+      h1 {
+        @apply my-4 text-lg;
+      }
+      .container {
+        @apply text-center;
+      }
+      .display {
+        @apply text-2xl;
+      }
+    </style>
+    <title>Calculator</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Calculator</h1>
+
+      <val memory:object="0"></val>
+      <val num:object="0"></val>
+      <val operation:object="null"></val>
+
+      <sub name="math">
+        <if test="operation == '+'">
+          <val memory:?="memory + num"></val>
+        </if>
+        <if test="operation == '-'">
+          <val memory:?="memory - num"></val>
+        </if>
+        <if test="operation == '*'">
+          <val memory:?="memory * num"></val>
+        </if>
+        <if test="operation == '/'">
+          <val memory:?="memory / num"></val>
+        </if>
+        <if test="!operation">
+          <val memory:?="num"></val>
+        </if>
+      </sub>
+
+      <sub name="operatorclick">
+        <exec cmd="$math"></exec>
+        <val operation:object="null"></val>
+        <val num:object="0"></val>
+      </sub>
+
+      <sub name="equalsclick">
+        <if test="operation">
+          <exec cmd="$math"></exec>
+          <val num:?="memory"></val>
+          <val operation:object="null"></val>
+          <val memory:object="0"></val>
+        </if>
+      </sub>
+
+      <div class="display" watch="memory,num,operation">
+        <if test="operation">
+          <span set:text="memory"></span>
+          <span set:text="operation"></span>
+        </if>
+        <span set:text="num"></span>
+      </div>
+
+      <div>
+        <button on:click:num="(num * 10) + 1">1</button>
+        <button on:click:num="(num * 10) + 2">2</button>
+        <button on:click:num="(num * 10) + 3">3</button>
+        <button on:click="$operatorclick" on:click:operation="'+'">+</button>
+      </div>
+      <div>
+        <button on:click:num="(num * 10) + 4">4</button>
+        <button on:click:num="(num * 10) + 5">5</button>
+        <button on:click:num="(num * 10) + 6">6</button>
+        <button on:click="$operatorclick" on:click:operation="'-'">-</button>
+      </div>
+      <div>
+        <button on:click:num="(num * 10) + 7">7</button>
+        <button on:click:num="(num * 10) + 8">8</button>
+        <button on:click:num="(num * 10) + 9">9</button>
+        <button on:click="$operatorclick" on:click:operation="'*'">*</button>
+      </div>
+      <div>
+        <button on:click:memory="0" on:click:num="0" on:click:operation="null">
+          C
+        </button>
+        <button on:click:num="num * 10">0</button>
+        <button on:click="$equalsclick">=</button>
+        <button on:click="$operatorclick" on:click:operation="'/'">/</button>
+      </div>
+    </div>
+  </body>
+</html>

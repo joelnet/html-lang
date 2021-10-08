@@ -7,16 +7,14 @@
     <title>Document</title>
   <script defer src="html-lang.js"></script></head>
   <body>
-    <div>
-      <for num:of="range(1, 100)">
-        <val fizz:?="num % 3 === 0" buzz:?="num % 5 === 0"></val>
-        <div>
-          <if test="fizz">Fizz</if><if test="buzz">Buzz</if>
-          <if test="!fizz && !buzz">
-            <span set:text="num"></span>
-          </if>
-        </div>
-      </for>
-    </div>
+    <for num:of="range(1, 100)">
+      <val fizz:?="num % 3 === 0" buzz:?="num % 5 === 0"></val>
+      <div>
+        <if test="fizz">Fizz</if><if test="buzz">Buzz</if>
+        <if test="!fizz && !buzz">
+          <span set:text="num"></span>
+        </if>
+      </div>
+    </for>
   </body>
 </html>

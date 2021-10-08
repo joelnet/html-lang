@@ -1,8 +1,10 @@
+import { runExec } from "./exec";
 import { fetchJson } from "./fetch";
 import { runFor } from "./for";
 import { addEventListener, removeAllEventListeners } from "./lib/events";
 import { createScope, saveScope } from "./scopes";
 import { injectStyleSheet } from "./stylesheet";
+import { runSub } from "./subroutine";
 import {
   attributeValue,
   computeValue,
@@ -10,13 +12,9 @@ import {
   globalsSet,
   watchers,
 } from "./values";
+import { setVisibility } from "./lib/setVisibility";
 
 const childrenCache = new WeakMap();
-const eventListeners = new WeakMap();
-
-const setVisibility = (element, visible) => {
-  element.style.display = visible ? "inline-block" : "";
-};
 
 const getSiblings = (element) =>
   [...element.parentNode.children].filter((el) => el !== element);
@@ -59,7 +57,7 @@ const saveVal = async (element) => {
       value = computeValue(element, value);
     }
 
-    globalsSet(element, name, value, false);
+    globalsSet(element, name, value, true);
   }
 };
 
@@ -138,6 +136,10 @@ const parseAttributes = (element) => {
       const name = match ? match.groups.name : null;
 
       const handler = () => {
+        if (attribute.value.match(/^\$.*/g)) {
+          return runSub(attribute.value.substring(1));
+        }
+
         const value = computeValue(element, attribute.value);
         if (name) {
           globalsSet(element, name, value);
@@ -163,6 +165,12 @@ const parseElement = async (element) => {
   }
   if (element.tagName === "FOR") {
     return await runFor(element);
+  }
+  if (element.tagName === "SUB") {
+    return false;
+  }
+  if (element.tagName === "EXEC") {
+    return await runExec(element);
   }
 
   parseAttributes(element);
