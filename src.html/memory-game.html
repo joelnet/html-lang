@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Orbitron"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn-tailwindcss.vercel.app/"></script>
+    <style type="text/tailwindcss">
+      .container {
+        margin: auto;
+      }
+      .flex-grid {
+        display: flex;
+      }
+      .col {
+        flex: 1;
+      }
+      h1 {
+        @apply text-4xl text-center my-8;
+      }
+      .congratulations {
+        @apply text-2xl text-center mb-8;
+      }
+      button {
+        @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded;
+      }
+      img {
+        user-drag: none;
+        -moz-user-select: none;
+        -webkit-user-drag: none;
+      }
+    </style>
+    <title>Memory Game</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Memory Game</h1>
+
+      <!-- prettier-ignore -->
+      <div hidden>
+        <img id="card1" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/arcade.png" />
+        <img id="card2" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/billiard.png" />
+        <img id="card3" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/cards.png" />
+        <img id="card4" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/chess.png" />
+        <img id="card5" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/game-controller.png" />
+        <img id="card6" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/game-controller2.png" />
+        <img id="card7" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/gaming.png" />
+        <img id="card8" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/ghost.png" />
+        <img id="card9" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/sword.png" />
+        <img id="card10" src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/tetris.png"/>
+      </div>
+
+      <val sleep:object="ms => new Promise(r => setTimeout(r, ms))"></val>
+      <val rows:object="4"></val>
+      <val cols:object="5"></val>
+      <val tiles:object="[1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10]"></val>
+      <exec cmd="$init"></exec>
+
+      <sub name="init">
+        <val match:object="[]"></val>
+        <val allmatches:object="[]"></val>
+        <val clicked:object="[]"></val>
+        <val moves:number="0"></val>
+        <val winner:bool="false"></val>
+        <div shuffle:for:of="range(1,10)">
+          <exec cmd="tiles.sort(() => Math.random() - 0.5)"></exec>
+        </div>
+      </sub>
+
+      <sub name="click">
+        <if test="match[0] == null">
+          <val match:?="clicked"></val>
+          <val clicked:?="[]"></val>
+        </if>
+        <else>
+          <val moves:?="moves + 1"></val>
+          <if
+            test="tiles[(clicked[0]*cols)+clicked[1]] === tiles[(match[0]*cols)+match[1]]"
+          >
+            <val allmatches:?="[...allmatches, match, clicked]"></val>
+            <val match:object="[]"></val>
+            <val clicked:object="[]"></val>
+            <val winner:?="allmatches.length === tiles.length"></val>
+          </if>
+          <else>
+            <exec cmd="sleep(1000)"></exec>
+            <val match:?="[]"></val>
+            <val clicked:?="[]"></val>
+          </else>
+        </else>
+      </sub>
+
+      <div watch="winner" class="congratulations">
+        <if test="winner">
+          <p>Congratulations! You won in <span #text="moves"></span> moves!</p>
+          <button on:click="$init">Play Again</button>
+        </if>
+      </div>
+
+      <div watch="match,clicked">
+        <div row:for:of="range(0,rows - 1)">
+          <div col:for:of="range(0,cols - 1)" class="flex-grid">
+            <div class="col">
+              <val
+                prevmatch:?="allmatches.find(m => m[0] === row && m[1] === col)"
+                isclicked:?="(clicked[0] === row && clicked[1] === col)"
+                showcard:?="(match[0] === row && match[1] === col) || prevmatch || isclicked"
+              ></val>
+
+              <if test="showcard">
+                <img #src="eval('card'+tiles[(row*cols)+col]).src" />
+              </if>
+              <else>
+                <if test="clicked.length === 0 || match.length === 0">
+                  <img
+                    on:click:clicked="[row, col]"
+                    on:click="$click"
+                    src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/question.png"
+                  />
+                </if>
+                <else>
+                  <!-- prettier-ignore -->
+                  <img src="https://s3.us-west-2.amazonaws.com/cdn.joel.net/html-lang/question.png" />
+                </else>
+              </else>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,6 +1,5 @@
 import { runExec } from "./exec";
 import { fetchJson } from "./fetch";
-import { runFor } from "./for";
 import { addEventListener, removeAllEventListeners } from "./lib/events";
 import { createScope, saveScope } from "./scopes";
 import { injectStyleSheet } from "./stylesheet";
@@ -13,6 +12,7 @@ import {
   watchers,
 } from "./values";
 import { setVisibility } from "./lib/setVisibility";
+import { isFor, runFor2 } from "./for2";
 
 const childrenCache = new WeakMap();
 
@@ -64,6 +64,14 @@ const saveVal = async (element) => {
 const runIfElement = (element) => {
   if (!element.hasAttribute("test")) return false;
   const truthy = computeValue(element, element.getAttribute("test"));
+
+  // ELSE?
+  const next = element.nextElementSibling;
+  if (next?.tagName === "ELSE") {
+    next.removeAttribute("test");
+    next.setAttribute("test", truthy ? "false" : "true");
+  }
+
   return !!truthy;
 };
 
@@ -108,8 +116,11 @@ const parseAttributes = (element) => {
   removeAllEventListeners(element);
 
   for (let attribute of element.attributes) {
-    if (attribute.name === "set:text") {
+    if (attribute.name === "#text") {
       element.textContent = computeValue(element, attribute.value);
+    } else if (attribute.name.startsWith("#")) {
+      const value = computeValue(element, attribute.value);
+      element.setAttribute(attribute.name.substring(1), value);
     }
     // TODO: bind:value is new. deprecate onchange:set.
     if (attribute.name === "onchange:set" || attribute.name === "bind:value") {
@@ -119,7 +130,7 @@ const parseAttributes = (element) => {
         globalsSet(element, attribute.value, target.value);
       };
 
-      addEventListener(element, keyup, handler);
+      addEventListener(element, "keyup", handler);
     }
     if (attribute.name === "watch") {
       const keys = attribute.value.split(",").map((key) => key.trim());
@@ -155,7 +166,7 @@ const parseElement = async (element) => {
   if (element.tagName === "VAL") {
     return await saveVal(element);
   }
-  if (element.tagName === "IF") {
+  if (element.tagName === "IF" || element.tagName === "ELSE") {
     const truthy = runIfElement(element);
     setVisibility(element, truthy);
     return truthy;
@@ -163,14 +174,14 @@ const parseElement = async (element) => {
   if (element.tagName === "WHILE") {
     return await runWhileElement(element);
   }
-  if (element.tagName === "FOR") {
-    return await runFor(element);
-  }
   if (element.tagName === "SUB") {
     return false;
   }
   if (element.tagName === "EXEC") {
     return await runExec(element);
+  }
+  if (isFor(element)) {
+    return await runFor2(element);
   }
 
   parseAttributes(element);

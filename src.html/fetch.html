@@ -16,11 +16,11 @@
         data:?="response.json"
       ></val>
       <if test="loading">Loading...</if>
-      <if test="error"> Error: <span set:text="error"></span> </if>
+      <if test="error"> Error: <span #text="error"></span> </if>
       <if test="data">
-        <div>name: <span set:text="data.name"></span></div>
-        <div>gender: <span set:text="data.gender"></span></div>
-        <div>height: <span set:text="data.height"></span>cm</div>
+        <div>name: <span #text="data.name"></span></div>
+        <div>gender: <span #text="data.gender"></span></div>
+        <div>height: <span #text="data.height"></span>cm</div>
       </if>
     </div>
   </body>

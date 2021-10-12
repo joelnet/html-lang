@@ -1,9 +1,10 @@
 const styleSheet = `
 val,
 if,
+else,
 while,
 sub {
-    display: none;
+  display: none;
 }
 `;
 

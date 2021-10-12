@@ -15,14 +15,14 @@
     <hr />
 
     <div watch="todos">
-      <for todo:of="todos">
+      <div todo:for:of="todos">
         <div>
           <button on:click:todos="todos.filter((item) => item !== todo)">
             X
           </button>
-          <span set:text="todo"></span>
+          <span #text="todo"></span>
         </div>
-      </for>
+      </div>
     </div>
   </body>
 </html>

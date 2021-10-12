@@ -12,7 +12,7 @@
       <val i:number="0"></val>
       <while test="i < list.length">
         <div>
-          list[<span set:text="i"></span>] = <span set:text="list[i]"></span>
+          list[<span #text="i"></span>] = <span #text="list[i]"></span>
           <val i:?="i+1"></val>
         </div>
       </while>

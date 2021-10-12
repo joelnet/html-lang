@@ -4,7 +4,7 @@
 
 `html-lang` features no build step, no bundling, no webpack configs. Open up your HTML and start writing HTML.
 
-At only 5kB (gzip) in size, `html-lang` is a tiny framework.
+At only 5.7kB (gzip) in size, `html-lang` is a tiny framework.
 
 ## Why?
 
@@ -12,18 +12,14 @@ Most frameworks are designed to be template engines. These typically mix their t
 
 While `html-lang` is similar to quite a bit of existing tech out there, the focus of this library is to bring that programming feel to HTML.
 
-This also allows you to stay inside the framework
-
-And because...
-
-![Oh No... You're not familiar with doing whatever the fuck you want?](what-the-hell-are-you-doing.jpg)
+This allows you to stay inside the framework.
 
 ## Install
 
 Include the script tag into the `<head></head>` section of your HTML.
 
 ```html
-<script src="https://unpkg.com/@joelnet/html-lang@0.0.8/umd/html-lang.js"></script>
+<script src="https://unpkg.com/@joelnet/html-lang@0.1.0/umd/html-lang.js"></script>
 ```
 
 ## Variables
@@ -36,6 +32,9 @@ Variables are globally scoped.
 
 <!-- Number -->
 <val x:number="888"></val>
+
+<!-- Number -->
+<val test:bool="true"></val>
 
 <!-- Object -->
 <val y:object="{ x: 1, y: 2 }"></val>
@@ -65,7 +64,7 @@ Display a Variable
 <val message="Hello World"></val>
 
 <!-- Display message -->
-<span set:text="message"></span>
+<span #text="message"></span>
 ```
 
 ## If / Conditional
@@ -91,11 +90,13 @@ A `for-of` loop will loop through all the items in the collection, setting the i
 <val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- todo in todos -->
-<for todo:of="todos">
-  <div set:text="todo"></div>
-</for>
-<!-- <div>Be nice to others</div> -->
-<!-- <div>Drink water</div> -->
+<div todo:for:of="todos">
+  <div #text="todo"></div>
+</div>
+<!-- <div> -->
+<!--   <div>Be nice to others</div> -->
+<!--   <div>Drink water</div> -->
+<!-- </div> -->
 ```
 
 A `for-in` loop will loop through all the items in the collection, setting the index to the variable specified.
@@ -105,11 +106,13 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 <val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- set i to 1 -->
-<for index:in="todos">
-  <div set:text="index"></div>
-</for>
-<!-- <div>0</div> -->
-<!-- <div>1</div> -->
+<div index:in="todos">
+  <div #text="index"></div>
+</div>
+<!-- <div> -->
+<!--   <div>0</div> -->
+<!--   <div>1</div> -->
+<!-- </div> -->
 ```
 
 `for-of` and `for-in` can be combined together if they both point to the same collection.
@@ -119,12 +122,18 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 <val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- set i to 1 -->
-<for index:in="todos" todo:of="todos">
-  <div><span set:text="index+1"></span>. <span set:text="todo"></span></div>
-</for>
-<!-- <div>1. Be nice to others</div> -->
-<!-- <div>2. Drink water</div> -->
+<div index:for:in="todos" todo:for:of="todos">
+  <div><span #text="index+1"></span>. <span #text="todo"></span></div>
+</div>
+<!-- <div> -->
+<!--   <div>1. Be nice to others</div> -->
+<!--   <div>2. Drink water</div> -->
+<!-- </div> -->
 ```
+
+## Subroutines
+
+A Subroutine can be created to run common tasks. Subroutines take no arguments and return no values, but do have access to the variables.
 
 ## Fetching Data
 
@@ -143,13 +152,13 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 <if test="loading">Loading...</if>
 
 <!-- Show if Error -->
-<if test="error"> Error: <span set:text="error"></span> </if>
+<if test="error"> Error: <span #text="error"></span> </if>
 
 <!-- Display Data -->
 <if test="data">
-  <div>name: <span set:text="data.name"></span></div>
-  <div>gender: <span set:text="data.gender"></span></div>
-  <div>height: <span set:text="data.height"></span>cm</div>
+  <div>name: <span #text="data.name"></span></div>
+  <div>gender: <span #text="data.gender"></span></div>
+  <div>height: <span #text="data.height"></span>cm</div>
 </if>
 ```
 
@@ -159,7 +168,7 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 
 ```html
 <!-- loop through 1 to 100 -->
-<for num:of="range(1, 100)">
+<div num:for:of="range(1, 100)">
   <!-- set fizz and buzz Booleans -->
   <val fizz:?="num % 3 === 0" buzz:?="num % 5 === 0"></val>
 
@@ -169,10 +178,10 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 
     <!-- no match -->
     <if test="!fizz && !buzz">
-      <span set:text="num"></span>
+      <span #text="num"></span>
     </if>
   </div>
-</for>
+</div>
 ```
 
 ### TODO List
@@ -186,11 +195,11 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 <hr />
 
 <div watch="todos">
-  <for todo:of="todos">
+  <div todo:for:of="todos">
     <div>
       <button on:click:todos="todos.filter((item) => item !== todo)">X</button>
-      <span set:text="todo"></span>
+      <span #text="todo"></span>
     </div>
-  </for>
+  </div>
 </div>
 ```

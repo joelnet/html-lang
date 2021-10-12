@@ -5,6 +5,21 @@ import { range } from "./lib/range";
 export const watchers = new Map();
 export const globals = new Map();
 export const scopes = new WeakMap();
+const processQueue = [];
+let isProcessing = false;
+
+const startQueue = () => {
+  if (isProcessing || processQueue.length === 0) return;
+  isProcessing = true;
+
+  const action = processQueue.shift(1);
+  action()
+    .catch((err) => console.error(err))
+    .finally(() => {
+      isProcessing = false;
+      startQueue();
+    });
+};
 
 export const globalsSet = (element, key, value, runWatchers = true) => {
   const scope = getScope(element);
@@ -16,7 +31,8 @@ export const globalsSet = (element, key, value, runWatchers = true) => {
 
   if (runWatchers && watchers.has(key)) {
     const elements = watchers.get(key);
-    processChildren(elements.values());
+    processQueue.push(() => processChildren(elements.values()));
+    startQueue();
   }
 };
 
