@@ -1,5 +1,7 @@
 # HTML is a Programming Language!
 
+HTML is now a Turing complete programming language with the `html-lang` library.
+
 `html-lang` is experimental and currently in development. So that means don't go slipping this into your production site! Proceed at your own risk!
 
 `html-lang` features no build step, no bundling, no webpack configs. Open up your HTML, include the script and start writing HTML.
