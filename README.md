@@ -1,10 +1,10 @@
 # HTML is a Programming Language!
 
-`html-lang` is experimental and currently in development. Proceed at your own risk!
+`html-lang` is experimental and currently in development. So that means don't go slipping this into your production site! Proceed at your own risk!
 
-`html-lang` features no build step, no bundling, no webpack configs. Open up your HTML and start writing HTML.
+`html-lang` features no build step, no bundling, no webpack configs. Open up your HTML, include the script and start writing HTML.
 
-At only 5.7kB (gzip) in size, `html-lang` is a tiny framework.
+At only 5.7kB (gzip) in size, `html-lang` is a tiny but powerful framework.
 
 ## Why?
 
@@ -73,12 +73,11 @@ Display a Variable
 <if test="x > 10">X is GREATER than 10!</if>
 ```
 
-An `else` can be simulated by negating the if condition.
+An `else` can follow an `if` element.
 
 ```html
 <if test="x > 10">X is GREATER than 10!</if>
-
-<if test="!(x > 10)">X is NOT GREATER than 10!</if>
+<else>X is NOT GREATER than 10!</else>
 ```
 
 ## Loops
@@ -90,13 +89,13 @@ A `for-of` loop will loop through all the items in the collection, setting the i
 <val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- todo in todos -->
-<div todo:for:of="todos">
-  <div #text="todo"></div>
-</div>
-<!-- <div> -->
-<!--   <div>Be nice to others</div> -->
-<!--   <div>Drink water</div> -->
-<!-- </div> -->
+<ul todo:for:of="todos">
+  <li #text="todo"></li>
+</ul>
+<!-- <ul> -->
+<!--   <li>Be nice to others</li> -->
+<!--   <li>Drink water</li> -->
+<!-- </ul> -->
 ```
 
 A `for-in` loop will loop through all the items in the collection, setting the index to the variable specified.
@@ -106,13 +105,13 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 <val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- set i to 1 -->
-<div index:in="todos">
-  <div #text="index"></div>
-</div>
-<!-- <div> -->
-<!--   <div>0</div> -->
-<!--   <div>1</div> -->
-<!-- </div> -->
+<ul index:in="todos">
+  <li #text="index"></li>
+</ul>
+<!-- <ul> -->
+<!--   <li>0</li> -->
+<!--   <li>1</li> -->
+<!-- </ul> -->
 ```
 
 `for-of` and `for-in` can be combined together if they both point to the same collection.
@@ -122,13 +121,13 @@ A `for-in` loop will loop through all the items in the collection, setting the i
 <val todos:object="['Be nice to others', 'Drink water']"></val>
 
 <!-- set i to 1 -->
-<div index:for:in="todos" todo:for:of="todos">
-  <div><span #text="index+1"></span>. <span #text="todo"></span></div>
-</div>
-<!-- <div> -->
-<!--   <div>1. Be nice to others</div> -->
-<!--   <div>2. Drink water</div> -->
-<!-- </div> -->
+<ul index:for:in="todos" todo:for:of="todos">
+  <li><span #text="index+1"></span>. <span #text="todo"></span></li>
+</ul>
+<!-- <ul> -->
+<!--   <li>1. Be nice to others</li> -->
+<!--   <li>2. Drink water</li> -->
+<!-- </ul> -->
 ```
 
 ## Subroutines
@@ -195,11 +194,20 @@ A Subroutine can be created to run common tasks. Subroutines take no arguments a
 <hr />
 
 <div watch="todos">
-  <div todo:for:of="todos">
-    <div>
+  <ul todo:for:of="todos">
+    <li>
       <button on:click:todos="todos.filter((item) => item !== todo)">X</button>
       <span #text="todo"></span>
-    </div>
-  </div>
+    </li>
+  </ul>
 </div>
 ```
+
+### More Examples
+
+- [Memory Game](https://codepen.io/joelnet/pen/BadymQz)
+- [Calculator](https://codepen.io/joelnet/pen/porzEPv)
+
+## Alternatives
+
+- [Alpine.js](https://alpinejs.dev/) — Alpine is a rugged, minimal tool for composing behavior directly in your markup. Think of it like jQuery for the modern web. Plop in a script tag and get going.

@@ -4,7 +4,14 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>TODO</title>
+    <style type="text/css">
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <val todos:object="['Be nice to others', 'Drink water']"></val>
@@ -15,14 +22,14 @@
     <hr />
 
     <div watch="todos">
-      <div todo:for:of="todos">
-        <div>
+      <ul todo:for:of="todos">
+        <li>
           <button on:click:todos="todos.filter((item) => item !== todo)">
             X
           </button>
           <span #text="todo"></span>
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
   </body>
 </html>
