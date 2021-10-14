@@ -13,6 +13,7 @@ import {
 } from "./values";
 import { setVisibility } from "./lib/setVisibility";
 import { isFor, runFor2 } from "./for2";
+import { setAttribute } from "./lib/setAttribute";
 
 const childrenCache = new WeakMap();
 
@@ -69,7 +70,7 @@ const runIfElement = (element) => {
   const next = element.nextElementSibling;
   if (next?.tagName === "ELSE") {
     next.removeAttribute("test");
-    next.setAttribute("test", truthy ? "false" : "true");
+    setAttribute(next, "test", truthy ? "false" : "true");
   }
 
   return !!truthy;
@@ -120,7 +121,7 @@ const parseAttributes = (element) => {
       element.textContent = computeValue(element, attribute.value);
     } else if (attribute.name.startsWith("#")) {
       const value = computeValue(element, attribute.value);
-      element.setAttribute(attribute.name.substring(1), value);
+      setAttribute(element, attribute.name.substring(1), value);
     }
     // TODO: bind:value is new. deprecate onchange:set.
     if (attribute.name === "onchange:set" || attribute.name === "bind:value") {

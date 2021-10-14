@@ -21,7 +21,7 @@ This allows you to stay inside the framework.
 Include the script tag into the `<head></head>` section of your HTML.
 
 ```html
-<script src="https://unpkg.com/@joelnet/html-lang@0.1.0/umd/html-lang.js"></script>
+<script src="https://unpkg.com/@joelnet/html-lang@0.1.1/umd/html-lang.js"></script>
 ```
 
 ## Variables
