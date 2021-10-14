@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn-tailwindcss.vercel.app/"></script>
+    <style type="text/tailwindcss">
+      h1 {
+        @apply text-4xl text-center my-8;
+      }
+      h2 {
+        @apply text-2xl text-center;
+      }
+      button {
+        @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-1 rounded;
+      }
+      dialog {
+        @apply border-2 rounded w-6/12;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Dialog</h1>
+
+      <val open:bool="false"></val>
+
+      <div watch="open">
+        <button on:click:open="!open" #text="open ? 'Close' : 'Open'"></button>
+
+        <dialog #open="open">
+          <h2>Hello Dialog!</h2>
+        </dialog>
+      </div>
+    </div>
+  </body>
+</html>
