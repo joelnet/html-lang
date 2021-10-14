@@ -205,6 +205,20 @@ A Subroutine can be created to run common tasks. Subroutines take no arguments a
 </div>
 ```
 
+### Dialog
+
+```html
+<val open:bool="false"></val>
+
+<div watch="open">
+  <button on:click:open="!open" #text="open ? 'Close' : 'Open'"></button>
+
+  <dialog #open="open">
+    <h2>Hello Dialog!</h2>
+  </dialog>
+</div>
+```
+
 ### More Examples
 
 - [Memory Game](https://codepen.io/joelnet/pen/BadymQz)
