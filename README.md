@@ -35,7 +35,7 @@ Variables are globally scoped.
 <!-- Number -->
 <val x:number="888"></val>
 
-<!-- Number -->
+<!-- Boolean -->
 <val test:bool="true"></val>
 
 <!-- Object -->
